@@ -1,17 +1,27 @@
-# latihan01_25
+# Aplikasi Belajar Flutter
 
-A new Flutter project.
+## Deskripsi
+Aplikasi ini dibuat sebagai tugas mata pelajaran Rekayasa Perangkat Lunak (RPL). Proyek menggunakan framework Flutter dan dijalankan pada Windows Desktop.
 
-## Getting Started
+## Fitur
+- Menampilkan halaman utama Flutter.
+- Menggunakan Counter App bawaan Flutter.
+- Dapat dijalankan pada Windows Desktop.
 
-This project is a starting point for a Flutter application.
+## Teknologi
+- Flutter
+- Dart
+- Visual Studio Code
+- Git
 
-A few resources to get you started if this is your first Flutter project:
+## Cara Menjalankan
+1. Buka terminal pada folder proyek.
+2. Jalankan:
+   flutter pub get
+3. Jalankan aplikasi:
+   flutter run -d windows
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Pengembang
+Nama: Nanda Ridho Alfa Roby
+Kelas: XI RPL 1
+Sekolah: SMK Brantas Karangkates
