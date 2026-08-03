@@ -10,18 +10,18 @@ void main() {
   );
 
   // ==========================
-  // RPL-12.2-204 (PENGUJIAN SKENARIO)
-  // Ubah variabel di bawah ini sesuai skenario yang ingin diuji:
-  // Skenario 1: bool anggota = true, hargaAnggota = 5000, jumlahBeli = 50, kategori = "makanan"
-  // Skenario 2: bool anggota = false, hargaUmum = 6000, jumlahBeli = 25, kategori = "makanan"
-  // Skenario 3: bool anggota = false, hargaUmum = 5000, jumlahBeli = 10, kategori = "makanan"
+  // RPL-12.2-2S1 (HOTS-1: DISKON KHUSUS ANGGOTA > 500 RIBU)
+  // Ubah variabel di bawah ini untuk menguji berbagai skenario:
+  // Pengujian 1: bool anggota = true, hargaAnggota = 10000, jumlahBeli = 60 (Total = 600.000 -> Diskon 15%)
+  // Pengujian 2: bool anggota = true, hargaAnggota = 5000, jumlahBeli = 50 (Total = 250.000 -> Diskon 10%)
+  // Pengujian 3: bool anggota = false, hargaUmum = 6000, jumlahBeli = 25 (Total = 150.000 -> Diskon 5%)
   // ==========================
   bool anggota = true;
-  double hargaAnggota = 5000;
-  double hargaUmum = 6000;
-  int jumlahBeli = 50;
-  String namaBarang = "Buku Tulis";
-  String kategori = "makanan";
+  double hargaAnggota = 10000;
+  double hargaUmum = 12000;
+  int jumlahBeli = 60;
+  String namaBarang = "Buku Tulis Paket";
+  String kategori = "atk";
 
   int hargaSatuan;
   if (anggota) {
@@ -30,10 +30,15 @@ void main() {
     hargaSatuan = hargaUmum.toInt();
   }
 
-  double total = (hargaSatuan * jumlahBeli).toDouble();
+  double total = hargaSatuan.toDouble() * jumlahBeli;
   double diskon = 0;
 
-  if (total > 200000) {
+  // Aturan baru: anggota dengan total lebih dari Rp500.000
+  // mendapatkan diskon khusus sebesar 15%.
+  // Kondisi ini diletakkan di awal agar tidak tertimpa aturan diskon lama.
+  if (anggota && total > 500000) {
+    diskon = total * 0.15;
+  } else if (total > 200000) {
     diskon = total * 0.10;
   } else if (total > 100000) {
     diskon = total * 0.05;
@@ -58,7 +63,7 @@ void main() {
       rak = "Rak lain";
   }
 
-  print("===== TRANSAKSI =====");
+  print("===== TRANSAKSI (HOTS-1) =====");
   print("Jenis Pembeli : ${anggota ? "Anggota" : "Umum"}");
   print("Nama Barang   : $namaBarang");
   print("Harga Satuan  : ${rupiah.format(hargaSatuan)}");
@@ -67,7 +72,7 @@ void main() {
   print("Diskon        : ${rupiah.format(diskon)}");
   print("Harga Akhir   : ${rupiah.format(hargaAkhir)}");
   print("Kategori      : $rak");
-  print("=====================");
+  print("==============================");
 
   runApp(MyApp(
     anggota: anggota,
@@ -81,7 +86,6 @@ void main() {
     rak: rak,
   ));
 }
-
 
 class MyApp extends StatelessWidget {
   final bool anggota;
@@ -119,7 +123,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Pengujian Program Kasir - RPL-12.2-204'),
+          title: const Text('Tugas HOTS-1 — RPL-12.2-2S1'),
           backgroundColor: Colors.blueAccent,
         ),
         body: SingleChildScrollView(
@@ -128,7 +132,7 @@ class MyApp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Hasil Pengujian Transaksi",
+                "Perhitungan Diskon Khusus (HOTS-1)",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
@@ -176,10 +180,15 @@ class MyApp extends StatelessWidget {
 }
 
 // ==========================
-// JUSTIFIKASI PENGUJIAN (RPL-12.2-204)
+// CATATAN KERJA (RPL-12.2-2S1)
 // ==========================
-// Program telah bekerja sesuai aturan koperasi. Pada total belanja di atas Rp200.000 
-// diberikan diskon 10%, pada total di atas Rp100.000 diberikan diskon 5%, dan pada 
-// total Rp100.000 atau kurang tidak diberikan diskon. Harga yang digunakan juga berubah 
-// sesuai status pembeli sebagai anggota atau umum, serta posisi rak yang ditentukan 
-// menggunakan switch-case.
+// Saya menambahkan aturan baru yaitu anggota dengan total belanja lebih dari Rp500.000 
+// mendapatkan diskon 15%. Aturan tersebut ditempatkan pada kondisi paling awal agar tidak 
+// tertutup oleh aturan diskon lama sebesar 10% dan 5%.
+// 
+// Pengujian dilakukan pada tiga kondisi:
+// 1. Anggota > Rp500.000 mendapatkan diskon 15%.
+// 2. Anggota Rp250.000 tetap mendapatkan diskon lama 10%.
+// 3. Umum Rp150.000 tetap mendapatkan diskon lama 5%.
+// 
+// Hasil pengujian menunjukkan bahwa aturan baru berjalan dengan benar dan tidak merusak aturan sebelumnya.
