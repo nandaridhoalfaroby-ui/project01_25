@@ -10,18 +10,51 @@ void main() {
   );
 
   // ==========================
-  // RPL-12.2-2S1 (HOTS-1: DISKON KHUSUS ANGGOTA > 500 RIBU)
-  // Ubah variabel di bawah ini untuk menguji berbagai skenario:
-  // Pengujian 1: bool anggota = true, hargaAnggota = 10000, jumlahBeli = 60 (Total = 600.000 -> Diskon 15%)
-  // Pengujian 2: bool anggota = true, hargaAnggota = 5000, jumlahBeli = 50 (Total = 250.000 -> Diskon 10%)
-  // Pengujian 3: bool anggota = false, hargaUmum = 6000, jumlahBeli = 25 (Total = 150.000 -> Diskon 5%)
+  // RPL-12.2-302 (PERULANGAN WHILE - SIMULASI STOK)
+  // ==========================
+  int stokBuku = 3;
+
+  print("--- Penjualan Buku Tulis ---");
+  while (stokBuku > 0) {
+    stokBuku--;
+    print("Terjual 1, sisa stok: $stokBuku");
+  }
+  print("----------------------------\n");
+
+  // ==========================
+  // RPL-12.2-301 (DAFTAR BARANG DENGAN LIST & FOR)
+  // ==========================
+  List<String> namaBarangList = [
+    "Buku Tulis",
+    "Pulpen",
+    "Penghapus",
+    "Roti",
+    "Pensil"
+  ];
+
+  List<int> hargaBarangList = [
+    3000,
+    2500,
+    1500,
+    5000,
+    2000
+  ];
+
+  print("=== DAFTAR BARANG ===");
+  for (int i = 0; i < namaBarangList.length; i++) {
+    print("${i + 1}. ${namaBarangList[i]} - Rp. ${hargaBarangList[i]}");
+  }
+  print("=====================");
+
+  // ==========================
+  // TRANSAKSI UTAMA & VALIDASI (HOTS-1, HOTS-2, & HOTS-3)
   // ==========================
   bool anggota = true;
   double hargaAnggota = 10000;
   double hargaUmum = 12000;
-  int jumlahBeli = 60;
-  String namaBarang = "Buku Tulis Paket";
-  String kategori = "atk";
+  int jumlahBeli = 60; // Total = 600.000
+  String namaBarangAktif = "Buku Tulis Paket";
+  String kategori = "makanan";
 
   int hargaSatuan;
   if (anggota) {
@@ -31,11 +64,16 @@ void main() {
   }
 
   double total = hargaSatuan.toDouble() * jumlahBeli;
+
+  // Validasi input negatif (HOTS-2)
+  if (total < 0) {
+    print("ERROR: Total transaksi tidak boleh bernilai negatif.");
+    return;
+  }
+
   double diskon = 0;
 
-  // Aturan baru: anggota dengan total lebih dari Rp500.000
-  // mendapatkan diskon khusus sebesar 15%.
-  // Kondisi ini diletakkan di awal agar tidak tertimpa aturan diskon lama.
+  // Aturan diskon bertingkat (Urutan benar: dari terbesar ke terkecil - HOTS-3)
   if (anggota && total > 500000) {
     diskon = total * 0.15;
   } else if (total > 200000) {
@@ -63,16 +101,17 @@ void main() {
       rak = "Rak lain";
   }
 
-  print("===== TRANSAKSI (HOTS-1) =====");
+  print("");
+  print("===== TRANSAKSI KASIR =====");
   print("Jenis Pembeli : ${anggota ? "Anggota" : "Umum"}");
-  print("Nama Barang   : $namaBarang");
+  print("Nama Barang   : $namaBarangAktif");
   print("Harga Satuan  : ${rupiah.format(hargaSatuan)}");
   print("Jumlah Beli   : $jumlahBeli");
   print("Total         : ${rupiah.format(total)}");
   print("Diskon        : ${rupiah.format(diskon)}");
   print("Harga Akhir   : ${rupiah.format(hargaAkhir)}");
   print("Kategori      : $rak");
-  print("==============================");
+  print("===========================");
 
   runApp(MyApp(
     anggota: anggota,
@@ -81,9 +120,11 @@ void main() {
     total: total,
     diskon: diskon,
     hargaAkhir: hargaAkhir,
-    namaBarang: namaBarang,
+    namaBarang: namaBarangAktif,
     kategori: kategori,
     rak: rak,
+    namaBarangList: ['Buku Tulis', 'Pulpen', 'Penghapus', 'Roti', 'Pensil'],
+    hargaBarangList: [3000, 2500, 1500, 5000, 2000],
   ));
 }
 
@@ -97,6 +138,8 @@ class MyApp extends StatelessWidget {
   final String namaBarang;
   final String kategori;
   final String rak;
+  final List<String> namaBarangList;
+  final List<int> hargaBarangList;
 
   const MyApp({
     super.key,
@@ -109,6 +152,8 @@ class MyApp extends StatelessWidget {
     required this.namaBarang,
     required this.kategori,
     required this.rak,
+    required this.namaBarangList,
+    required this.hargaBarangList,
   });
 
   @override
@@ -123,7 +168,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Tugas HOTS-1 — RPL-12.2-2S1'),
+          title: const Text('Tutorial Lengkap — RPL-12.2-302'),
           backgroundColor: Colors.blueAccent,
         ),
         body: SingleChildScrollView(
@@ -132,8 +177,34 @@ class MyApp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Perhitungan Diskon Khusus (HOTS-1)",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                "=== DAFTAR BARANG KOPERASI ===",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(
+                      namaBarangList.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text(
+                          "${index + 1}. ${namaBarangList[index]} - Rp. ${hargaBarangList[index]}",
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 25),
+              const Divider(),
+              const Text(
+                "Hasil Transaksi & Validasi",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
               Card(
@@ -179,16 +250,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// ==========================
-// CATATAN KERJA (RPL-12.2-2S1)
-// ==========================
-// Saya menambahkan aturan baru yaitu anggota dengan total belanja lebih dari Rp500.000 
-// mendapatkan diskon 15%. Aturan tersebut ditempatkan pada kondisi paling awal agar tidak 
-// tertutup oleh aturan diskon lama sebesar 10% dan 5%.
-// 
-// Pengujian dilakukan pada tiga kondisi:
-// 1. Anggota > Rp500.000 mendapatkan diskon 15%.
-// 2. Anggota Rp250.000 tetap mendapatkan diskon lama 10%.
-// 3. Umum Rp150.000 tetap mendapatkan diskon lama 5%.
-// 
-// Hasil pengujian menunjukkan bahwa aturan baru berjalan dengan benar dan tidak merusak aturan sebelumnya.
+// Hati-hati banget ya, kalau salah nulis kondisi while bisa fatal akibatnya—programnya bisa nyangkut dan muter-muter terus tanpa henti (infinite loop), atau parahnya malah bikin stok barang jadi minus. Kalau kejadian di dunia nyata, koperasi bisa-bisa nombok atau jualan barang fiktif yang aslinya udah ludes.
+//
+// Makanya, biar aman dan nggak kebobolan jualan barang melebihi stok yang ada, kuncinya wajib pakai kondisi while (stok > 0). Dengan cara itu, proses transaksinya bakal otomatis berhenti tepat pas stok barangnya bener-bener sisa 0.

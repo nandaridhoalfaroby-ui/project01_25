@@ -23,6 +23,8 @@ void main() {
       namaBarang: 'Barang Test',
       kategori: 'Kategori Test',
       rak: 'A1',
+      namaBarangList: ['Barang Test'],
+      hargaBarangList: [0],
     ));
 
     // Verify that our counter starts at 0.
