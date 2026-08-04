@@ -10,52 +10,44 @@ double hitungHargaAkhir(double total, double persenPotongan) {
   return total - (total * persenPotongan / 100);
 }
 
+// Fungsi ketiga: Komposisi fungsi (bayarAkhir memanggil hitungTotal dan hitungHargaAkhir)
+double bayarAkhir(int jumlah, double harga, double persenPotongan) {
+  double total = hitungTotal(jumlah, harga);
+  return hitungHargaAkhir(total, persenPotongan);
+}
+
 void main() {
   int jumlah = 50;
   double harga = 5000;
+  double potongan = 10;
 
-  double total = hitungTotal(jumlah, harga);
-
-  double potongan;
-  if (total > 200000) {
-    potongan = 10;
-  } else if (total > 100000) {
-    potongan = 5;
-  } else {
-    potongan = 0;
-  }
-
-  double hargaAkhir = hitungHargaAkhir(total, potongan);
+  double hasil = bayarAkhir(jumlah, harga, potongan);
 
   print("Jumlah Barang : $jumlah");
   print("Harga Satuan : Rp$harga");
-  print("Total : Rp$total");
   print("Potongan : $potongan%");
-  print("Harga Akhir : Rp$hargaAkhir");
+  print("Bayar Akhir : Rp$hasil");
 
   runApp(MyApp(
     jumlah: jumlah,
     harga: harga,
-    total: total,
     potongan: potongan,
-    hargaAkhir: hargaAkhir,
+    hasil: hasil,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final int jumlah;
   final double harga;
-  final double total;
   final double potongan;
-  final double hargaAkhir;
+  final double hasil;
 
   const MyApp({
     super.key,
     required this.jumlah,
     required this.harga,
-    required this.total,
     required this.potongan,
-    required this.hargaAkhir,
+    required this.hasil,
   });
 
   @override
@@ -64,7 +56,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Tugas RPL-12.2-402 — Fungsi Hitung Harga Akhir'),
+          title: const Text('Tugas RPL-12.2-4S2 — HOTS-2 (Komposisi Fungsi)'),
           backgroundColor: Colors.blueAccent,
         ),
         body: Padding(
@@ -73,7 +65,7 @@ class MyApp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Simulasi Transaksi & Diskon",
+                "Simulasi Pembayaran Akhir",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
@@ -86,12 +78,10 @@ class MyApp extends StatelessWidget {
                     children: [
                       Text("Jumlah Barang : $jumlah"),
                       Text("Harga Satuan : Rp$harga"),
-                      const Divider(),
-                      Text("Total : Rp$total"),
                       Text("Potongan : $potongan%"),
                       const Divider(),
                       Text(
-                        "Harga Akhir : Rp$hargaAkhir",
+                        "Bayar Akhir : Rp$hasil",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
@@ -110,7 +100,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Nah, mecah program jadi fungsi-fungsi kecil kayak gini tuh ngebantu banget biar kodenya nggak semrawut dan gampang dipelajari. 
-// Jadi, misal besok-besok aturan diskonnya direvisi atau diganti, kita cukup ngerombak logika di dalem fungsi `hitungHargaAkhir()` 
-// atau pas bagian nentuin persentasenya aja. Otomatis, perubahan itu bakal langsung ngefek ke semua transaksi tanpa perlu repot 
-// rix ngebeber and ngerubah rumus satu-satu di banyak tempat!
+// Menyusun fungsi dari fungsi lain membuat program lebih modular,
+// rapi, dan mudah dipelihara. Jika cara menghitung total atau harga
+// akhir berubah, cukup mengubah fungsi terkait tanpa perlu mengubah
+// fungsi bayarAkhir() maupun bagian program lainnya.
