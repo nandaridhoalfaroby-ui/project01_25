@@ -115,6 +115,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Menggunakan List<Barang> membuat program lebih rapi dan mudah dikembangkan.
-// Jika jumlah barang bertambah, cukup menambahkan objek ke dalam list tanpa
-// menulis pemanggilan tampilkan() satu per satu seperti pada cara sebelumnya.
+// Memodelkan barang sebagai objek membuat program lebih terstruktur,
+// mudah dikembangkan, dan mudah dirawat. Jika koperasi ingin menambah
+// atribut seperti kode barang, tanggal kedaluwarsa, atau supplier,
+// cukup menambahkan atribut pada class Barang sehingga semua objek
+// otomatis mengikuti perubahan tanpa mengubah banyak bagian program.
