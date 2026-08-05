@@ -1,53 +1,72 @@
 import 'package:flutter/material.dart';
 
-// Fungsi pertama: Menghitung total belanja
-double hitungTotal(int jumlah, double harga) {
-  return jumlah * harga;
-}
+// Definisi Class Barang
+class Barang {
+  String nama;
+  double harga;
+  int stok;
+  String kategori;
 
-// Fungsi kedua: Menghitung harga akhir setelah diskon
-double hitungHargaAkhir(double total, double persenPotongan) {
-  return total - (total * persenPotongan / 100);
-}
+  Barang(
+    this.nama,
+    this.harga,
+    this.stok,
+    this.kategori,
+  );
 
-// Fungsi ketiga: Komposisi fungsi (bayarAkhir memanggil hitungTotal dan hitungHargaAkhir)
-double bayarAkhir(int jumlah, double harga, double persenPotongan) {
-  double total = hitungTotal(jumlah, harga);
-  return hitungHargaAkhir(total, persenPotongan);
+  void tampilkan() {
+    print("====================");
+    print("Nama : $nama");
+    print("Harga : Rp$harga");
+    print("Stok : $stok");
+    print("Kategori : $kategori");
+    print("====================");
+  }
 }
 
 void main() {
-  int jumlah = 50;
-  double harga = 5000;
-  double potongan = 10;
+  Barang buku = Barang(
+    "Buku Tulis",
+    3000,
+    20,
+    "ATK",
+  );
 
-  double hasil = bayarAkhir(jumlah, harga, potongan);
+  Barang pulpen = Barang(
+    "Pulpen",
+    2500,
+    15,
+    "ATK",
+  );
 
-  print("Jumlah Barang : $jumlah");
-  print("Harga Satuan : Rp$harga");
-  print("Potongan : $potongan%");
-  print("Bayar Akhir : Rp$hasil");
+  Barang roti = Barang(
+    "Roti",
+    5000,
+    10,
+    "Makanan",
+  );
 
-  runApp(MyApp(
-    jumlah: jumlah,
-    harga: harga,
-    potongan: potongan,
-    hasil: hasil,
-  ));
+  // Menyimpan objek ke dalam List<Barang>
+  List<Barang> daftarBarang = [
+    buku,
+    pulpen,
+    roti,
+  ];
+
+  // Menampilkan data menggunakan perulangan for
+  for (Barang barang in daftarBarang) {
+    barang.tampilkan();
+  }
+
+  runApp(MyApp(daftarBarang: daftarBarang));
 }
 
 class MyApp extends StatelessWidget {
-  final int jumlah;
-  final double harga;
-  final double potongan;
-  final double hasil;
+  final List<Barang> daftarBarang;
 
   const MyApp({
     super.key,
-    required this.jumlah,
-    required this.harga,
-    required this.potongan,
-    required this.hasil,
+    required this.daftarBarang,
   });
 
   @override
@@ -56,42 +75,38 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Tugas RPL-12.2-4S2 — HOTS-2 (Komposisi Fungsi)'),
+          title: const Text('Tugas RPL-12.2-503 — List (List<Barang>)'),
           backgroundColor: Colors.blueAccent,
         ),
         body: Padding(
           padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ListView(
             children: [
               const Text(
-                "Simulasi Pembayaran Akhir",
+                "Daftar Barang Menggunakan List",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
-              Card(
-                elevation: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Jumlah Barang : $jumlah"),
-                      Text("Harga Satuan : Rp$harga"),
-                      Text("Potongan : $potongan%"),
-                      const Divider(),
-                      Text(
-                        "Bayar Akhir : Rp$hasil",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                          fontSize: 18,
-                        ),
+              ...daftarBarang.map((barang) => Card(
+                    elevation: 4,
+                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Nama : ${barang.nama}",
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          Text("Harga : Rp${barang.harga}"),
+                          Text("Stok : ${barang.stok}"),
+                          Text("Kategori : ${barang.kategori}"),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
+                  )),
             ],
           ),
         ),
@@ -100,7 +115,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Menyusun fungsi dari fungsi lain membuat program lebih modular,
-// rapi, dan mudah dipelihara. Jika cara menghitung total atau harga
-// akhir berubah, cukup mengubah fungsi terkait tanpa perlu mengubah
-// fungsi bayarAkhir() maupun bagian program lainnya.
+// Menggunakan List<Barang> membuat program lebih rapi dan mudah dikembangkan.
+// Jika jumlah barang bertambah, cukup menambahkan objek ke dalam list tanpa
+// menulis pemanggilan tampilkan() satu per satu seperti pada cara sebelumnya.
