@@ -19,6 +19,11 @@ class Barang {
     return harga * stok;
   }
 
+  // Method baru untuk mengecek apakah barang bisa dijual berdasarkan permintaan
+  bool bisaDijual(int diminta) {
+    return stok >= diminta;
+  }
+
   void tampilkan() {
     print("======================");
     print("Nama      : $nama");
@@ -31,34 +36,46 @@ class Barang {
 }
 
 void main() {
-  List<Barang> daftarBarang = [
-    Barang("Buku Tulis", 3000, 20, "ATK"),
-    Barang("Pulpen", 2500, 15, "ATK"),
-    Barang("Roti", 5000, 10, "Makanan"),
-  ];
+  Barang buku = Barang(
+    "Buku Tulis",
+    3000,
+    20,
+    "ATK",
+  );
 
-  for (Barang barang in daftarBarang) {
-    barang.tampilkan();
+  buku.tampilkan();
+
+  int permintaan = 15;
+  print("Permintaan : $permintaan");
+
+  if (buku.bisaDijual(permintaan)) {
+    print("Status : Barang bisa dijual");
+  } else {
+    print("Status : Stok tidak mencukupi");
   }
 
-  runApp(MyApp(daftarBarang: daftarBarang));
+  runApp(MyApp(buku: buku, permintaan: permintaan));
 }
 
 class MyApp extends StatelessWidget {
-  final List<Barang> daftarBarang;
+  final Barang buku;
+  final int permintaan;
 
   const MyApp({
     super.key,
-    required this.daftarBarang,
+    required this.buku,
+    required this.permintaan,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool statusJual = buku.bisaDijual(permintaan);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Tugas RPL-12.2-5S1 — HOTS-1 (Nilai Stok)'),
+          title: const Text('Tugas RPL-12.2-5S2 — HOTS-2 (bisaDijual)'),
           backgroundColor: Colors.blueAccent,
         ),
         body: Padding(
@@ -66,39 +83,43 @@ class MyApp extends StatelessWidget {
           child: ListView(
             children: [
               const Text(
-                "Daftar Barang & Nilai Stok",
+                "Pengecekan Stok Penjualan",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
-              ...daftarBarang.map((barang) => Card(
-                    elevation: 4,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Nama      : ${barang.nama}",
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                          Text("Harga     : Rp${barang.harga}"),
-                          Text("Stok      : ${barang.stok}"),
-                          Text("Kategori  : ${barang.kategori}"),
-                          const Divider(),
-                          Text(
-                            "Nilai Stok: Rp${barang.nilaiStok()}",
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
+              Card(
+                elevation: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Nama      : ${buku.nama}",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  )),
+                      Text("Harga     : Rp${buku.harga}"),
+                      Text("Stok      : ${buku.stok}"),
+                      Text("Kategori  : ${buku.kategori}"),
+                      const Divider(),
+                      Text("Permintaan : $permintaan"),
+                      const SizedBox(height: 5),
+                      Text(
+                        statusJual
+                            ? "Status : Barang bisa dijual"
+                            : "Status : Stok tidak mencukupi",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: statusJual ? Colors.green : Colors.red,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -107,6 +128,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Nilai stok berguna untuk mengetahui total nilai persediaan setiap barang.
-// Informasi ini membantu koperasi menghitung aset yang dimiliki, membuat
-// laporan keuangan, serta menentukan kapan harus menambah stok barang.
+// Menaruh pengecekan stok di dalam objek Barang membuat setiap barang
+// dapat memeriksa stoknya sendiri. Program menjadi lebih rapi, kode
+// tidak perlu ditulis berulang, dan jika aturan penjualan berubah,
+// cukup mengubah method bisaDijual() pada class Barang.
