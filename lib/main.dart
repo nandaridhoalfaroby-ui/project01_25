@@ -14,46 +14,29 @@ class Barang {
     this.kategori,
   );
 
+  // Method untuk menghitung nilai stok
+  double nilaiStok() {
+    return harga * stok;
+  }
+
   void tampilkan() {
-    print("====================");
-    print("Nama : $nama");
-    print("Harga : Rp$harga");
-    print("Stok : $stok");
-    print("Kategori : $kategori");
-    print("====================");
+    print("======================");
+    print("Nama      : $nama");
+    print("Harga     : Rp$harga");
+    print("Stok      : $stok");
+    print("Kategori  : $kategori");
+    print("Nilai Stok: Rp${nilaiStok()}");
+    print("======================");
   }
 }
 
 void main() {
-  Barang buku = Barang(
-    "Buku Tulis",
-    3000,
-    20,
-    "ATK",
-  );
-
-  Barang pulpen = Barang(
-    "Pulpen",
-    2500,
-    15,
-    "ATK",
-  );
-
-  Barang roti = Barang(
-    "Roti",
-    5000,
-    10,
-    "Makanan",
-  );
-
-  // Menyimpan objek ke dalam List<Barang>
   List<Barang> daftarBarang = [
-    buku,
-    pulpen,
-    roti,
+    Barang("Buku Tulis", 3000, 20, "ATK"),
+    Barang("Pulpen", 2500, 15, "ATK"),
+    Barang("Roti", 5000, 10, "Makanan"),
   ];
 
-  // Menampilkan data menggunakan perulangan for
   for (Barang barang in daftarBarang) {
     barang.tampilkan();
   }
@@ -75,7 +58,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Tugas RPL-12.2-503 — List (List<Barang>)'),
+          title: const Text('Tugas RPL-12.2-5S1 — HOTS-1 (Nilai Stok)'),
           backgroundColor: Colors.blueAccent,
         ),
         body: Padding(
@@ -83,7 +66,7 @@ class MyApp extends StatelessWidget {
           child: ListView(
             children: [
               const Text(
-                "Daftar Barang Menggunakan List",
+                "Daftar Barang & Nilai Stok",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
@@ -96,13 +79,22 @@ class MyApp extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Nama : ${barang.nama}",
+                            "Nama      : ${barang.nama}",
                             style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
-                          Text("Harga : Rp${barang.harga}"),
-                          Text("Stok : ${barang.stok}"),
-                          Text("Kategori : ${barang.kategori}"),
+                          Text("Harga     : Rp${barang.harga}"),
+                          Text("Stok      : ${barang.stok}"),
+                          Text("Kategori  : ${barang.kategori}"),
+                          const Divider(),
+                          Text(
+                            "Nilai Stok: Rp${barang.nilaiStok()}",
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                              fontSize: 16,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -115,8 +107,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Memodelkan barang sebagai objek membuat program lebih terstruktur,
-// mudah dikembangkan, dan mudah dirawat. Jika koperasi ingin menambah
-// atribut seperti kode barang, tanggal kedaluwarsa, atau supplier,
-// cukup menambahkan atribut pada class Barang sehingga semua objek
-// otomatis mengikuti perubahan tanpa mengubah banyak bagian program.
+// Nilai stok berguna untuk mengetahui total nilai persediaan setiap barang.
+// Informasi ini membantu koperasi menghitung aset yang dimiliki, membuat
+// laporan keuangan, serta menentukan kapan harus menambah stok barang.
