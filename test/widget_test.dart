@@ -6,7 +6,8 @@ void main() {
     await tester.pumpWidget(
       MyApp(
         buku: Barang('Test Buku', 0, 0, ''),
-        permintaan: 1,
+        pembeli: Pembeli('Test Pembeli', false),
+        jumlah: 0,
       ),
     );
 
