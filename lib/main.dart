@@ -1,57 +1,40 @@
 import 'package:flutter/material.dart';
 
-// Definisi Class Barang
+// Definisi Class dengan Enkapsulasi
 class Barang {
   String nama;
   double harga;
-  int stok;
+  int _stok; // Variabel private menggunakan underscore (_)
   String kategori;
 
   Barang(
     this.nama,
     this.harga,
-    this.stok,
+    this._stok,
     this.kategori,
   );
 
-  double nilaiStok() {
-    return harga * stok;
+  // Getter untuk membaca nilai _stok dari luar class tanpa bisa mengubahnya langsung
+  int get stok {
+    return _stok;
   }
 
-  bool bisaDijual(int diminta) {
-    return stok >= diminta;
-  }
-
-  void tampilkan() {
-    print("===== DATA BARANG =====");
-    print("Nama       : $nama");
-    print("Harga      : Rp$harga");
-    print("Stok       : $stok");
-    print("Kategori   : $kategori");
-    print("Nilai Stok : Rp${nilaiStok()}");
-    print("=======================");
-  }
-}
-
-// Definisi Class Pembeli
-class Pembeli {
-  String nama;
-  bool statusAnggota;
-
-  Pembeli(
-    this.nama,
-    this.statusAnggota,
-  );
-
-  void tampilkan() {
-    print("===== DATA PEMBELI =====");
-    print("Nama   : $nama");
-    if (statusAnggota) {
-      print("Status : Anggota");
-    } else {
-      print("Status : Umum");
+  // Method jual untuk mengubah stok secara aman dengan validasi
+  bool jual(int n) {
+    if (_stok >= n) {
+      _stok -= n;
+      return true;
     }
-    print("========================");
+    return false;
+  }
+
+  void tampilkan() {
+    print("====================");
+    print("Nama     : $nama");
+    print("Harga    : Rp$harga");
+    print("Stok     : $stok");
+    print("Kategori : $kategori");
+    print("====================");
   }
 }
 
@@ -63,54 +46,49 @@ void main() {
     "ATK",
   );
 
-  Pembeli pembeli = Pembeli(
-    "Andi",
-    true,
-  );
-
-  pembeli.tampilkan();
+  print("=== SEBELUM PENJUALAN ===");
   buku.tampilkan();
+  print("");
 
-  int jumlah = 5;
+  int jumlahBeli = 5;
+  bool statusPenjualan = buku.jual(jumlahBeli);
+
+  if (statusPenjualan) {
+    print("Penjualan berhasil");
+  } else {
+    print("Stok tidak cukup");
+  }
 
   print("");
-  print("===== TRANSAKSI =====");
-  print("${pembeli.nama} membeli $jumlah ${buku.nama}");
-
-  if (buku.bisaDijual(jumlah)) {
-    print("Transaksi berhasil");
-  } else {
-    print("Stok tidak mencukupi");
-  }
+  print("=== SESUDAH PENJUALAN ===");
+  buku.tampilkan();
 
   runApp(MyApp(
     buku: buku,
-    pembeli: pembeli,
-    jumlah: jumlah,
+    jumlahBeli: jumlahBeli,
+    statusPenjualan: statusPenjualan,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final Barang buku;
-  final Pembeli pembeli;
-  final int jumlah;
+  final int jumlahBeli;
+  final bool statusPenjualan;
 
   const MyApp({
     super.key,
     required this.buku,
-    required this.pembeli,
-    required this.jumlah,
+    required this.jumlahBeli,
+    required this.statusPenjualan,
   });
 
   @override
   Widget build(BuildContext context) {
-    bool statusTransaksi = buku.bisaDijual(jumlah);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Tugas RPL-12.2-5S3 — HOTS-3 (Relasi Pembeli & Barang)'),
+          title: const Text('Tugas RPL-12.2-603 — Enkapsulasi'),
           backgroundColor: Colors.blueAccent,
         ),
         body: Padding(
@@ -118,11 +96,10 @@ class MyApp extends StatelessWidget {
           child: ListView(
             children: [
               const Text(
-                "Simulasi Transaksi Koperasi",
+                "Simulasi Enkapsulasi & Penjualan Barang",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
-              // Card Data Pembeli
               Card(
                 elevation: 4,
                 margin: const EdgeInsets.symmetric(vertical: 8),
@@ -132,62 +109,30 @@ class MyApp extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "DATA PEMBELI",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                        "STATUS PENJUALAN",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.blue),
                       ),
                       const Divider(),
-                      Text("Nama   : ${pembeli.nama}"),
-                      Text("Status : ${pembeli.statusAnggota ? 'Anggota' : 'Umum'}"),
-                    ],
-                  ),
-                ),
-              ),
-              // Card Data Barang
-              Card(
-                elevation: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "DATA BARANG",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
-                      const Divider(),
-                      Text("Nama       : ${buku.nama}"),
-                      Text("Harga      : Rp${buku.harga}"),
-                      Text("Stok       : ${buku.stok}"),
-                      Text("Kategori   : ${buku.kategori}"),
-                      Text("Nilai Stok : Rp${buku.nilaiStok()}"),
-                    ],
-                  ),
-                ),
-              ),
-              // Card Simulasi Transaksi
-              Card(
-                elevation: 4,
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "TRANSAKSI",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
-                      const Divider(),
-                      Text("${pembeli.nama} membeli $jumlah ${buku.nama}"),
+                      Text("Nama Barang : ${buku.nama}"),
+                      Text("Harga       : Rp${buku.harga}"),
+                      Text("Jumlah Beli : $jumlahBeli"),
                       const SizedBox(height: 5),
                       Text(
-                        statusTransaksi
-                            ? "Status : Transaksi berhasil"
-                            : "Status : Stok tidak mencukupi",
+                        statusPenjualan
+                            ? "Status      : Penjualan berhasil"
+                            : "Status      : Stok tidak cukup",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: statusTransaksi ? Colors.green : Colors.red,
+                          color: statusPenjualan ? Colors.green : Colors.red,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const Divider(),
+                      Text(
+                        "Sisa Stok   : ${buku.stok}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
@@ -203,9 +148,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Relasi yang wajar antara Pembeli dan Barang adalah association (asosiasi),
-// yaitu Pembeli melakukan transaksi untuk membeli Barang. Satu pembeli dapat
-// membeli banyak barang, dan satu jenis barang dapat dibeli oleh banyak
-// pembeli pada transaksi yang berbeda. Oleh karena itu, kedua objek saling
-// berhubungan melalui proses transaksi, tetapi masing-masing tetap dapat
-// berdiri sendiri.
+// Melindungi variabel _stok penting untuk menjaga integritas data koperasi
+// karena stok tidak dapat diubah secara langsung dari luar class. Perubahan
+// stok hanya dapat dilakukan melalui method jual(), sehingga setiap transaksi
+// dapat divalidasi terlebih dahulu agar stok tidak menjadi negatif atau tidak
+// sesuai dengan kondisi sebenarnya.
