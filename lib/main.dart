@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-// Definisi Class dengan Enkapsulasi
+// Definisi Class Barang dengan Enkapsulasi
 class Barang {
   String nama;
   double harga;
-  int _stok; // Variabel private menggunakan underscore (_)
+  int _stok;
   String kategori;
 
   Barang(
@@ -14,27 +14,37 @@ class Barang {
     this.kategori,
   );
 
-  // Getter untuk membaca nilai _stok dari luar class tanpa bisa mengubahnya langsung
-  int get stok {
-    return _stok;
-  }
+  int get stok => _stok;
 
-  // Method jual untuk mengubah stok secara aman dengan validasi
-  bool jual(int n) {
-    if (_stok >= n) {
-      _stok -= n;
+  bool jual(int jumlah) {
+    if (_stok >= jumlah) {
+      _stok -= jumlah;
       return true;
     }
     return false;
   }
+}
 
-  void tampilkan() {
-    print("====================");
-    print("Nama     : $nama");
-    print("Harga    : Rp$harga");
-    print("Stok     : $stok");
-    print("Kategori : $kategori");
-    print("====================");
+// Fungsi prosesBeli dengan Exception Handling (try-catch-finally)
+void prosesBeli(
+  Barang barang,
+  String inputJumlah,
+) {
+  try {
+    int jumlah = int.parse(inputJumlah);
+
+    if (barang.jual(jumlah)) {
+      print("Penjualan berhasil.");
+      print("Jumlah dibeli : $jumlah");
+      print("Sisa stok : ${barang.stok}");
+    } else {
+      print("Stok tidak mencukupi.");
+    }
+  } catch (e) {
+    print("Input tidak valid.");
+    print("Silakan masukkan jumlah berupa angka.");
+  } finally {
+    print("Transaksi dicatat di log.");
   }
 }
 
@@ -46,40 +56,25 @@ void main() {
     "ATK",
   );
 
-  print("=== SEBELUM PENJUALAN ===");
-  buku.tampilkan();
-  print("");
-
-  int jumlahBeli = 5;
-  bool statusPenjualan = buku.jual(jumlahBeli);
-
-  if (statusPenjualan) {
-    print("Penjualan berhasil");
-  } else {
-    print("Stok tidak cukup");
-  }
+  print("===== UJI 1 =====");
+  prosesBeli(buku, "2");
 
   print("");
-  print("=== SESUDAH PENJUALAN ===");
-  buku.tampilkan();
+
+  print("===== UJI 2 =====");
+  prosesBeli(buku, "dua");
 
   runApp(MyApp(
     buku: buku,
-    jumlahBeli: jumlahBeli,
-    statusPenjualan: statusPenjualan,
   ));
 }
 
 class MyApp extends StatelessWidget {
   final Barang buku;
-  final int jumlahBeli;
-  final bool statusPenjualan;
 
   const MyApp({
     super.key,
     required this.buku,
-    required this.jumlahBeli,
-    required this.statusPenjualan,
   });
 
   @override
@@ -88,7 +83,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Tugas RPL-12.2-603 — Enkapsulasi'),
+          title: const Text('Tugas RPL-12.2-703 — Uji dan Justifikasi'),
           backgroundColor: Colors.blueAccent,
         ),
         body: Padding(
@@ -96,7 +91,7 @@ class MyApp extends StatelessWidget {
           child: ListView(
             children: [
               const Text(
-                "Simulasi Enkapsulasi & Penjualan Barang",
+                "Tabel G : Pengujian Exception Handling",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 15),
@@ -109,28 +104,21 @@ class MyApp extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "STATUS PENJUALAN",
+                        "HASIL UJI COBA PROGRAM",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.blue),
                       ),
                       const Divider(),
-                      Text("Nama Barang : ${buku.nama}"),
-                      Text("Harga       : Rp${buku.harga}"),
-                      Text("Jumlah Beli : $jumlahBeli"),
-                      const SizedBox(height: 5),
-                      Text(
-                        statusPenjualan
-                            ? "Status      : Penjualan berhasil"
-                            : "Status      : Stok tidak cukup",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: statusPenjualan ? Colors.green : Colors.red,
-                          fontSize: 15,
-                        ),
-                      ),
+                      const Text("1. Uji prosesBeli(\"2\")"),
+                      const Text("   - Status: Penjualan berhasil, stok berkurang"),
+                      const Text("   - Tetap Berjalan: ✅ Ya (Sesuai aturan)"),
+                      const SizedBox(height: 10),
+                      const Text("2. Uji prosesBeli(\"dua\")"),
+                      const Text("   - Status: Muncul pesan input tidak valid"),
+                      const Text("   - Tetap Berjalan: ✅ Ya (Ditangani catch)"),
                       const Divider(),
                       Text(
-                        "Sisa Stok   : ${buku.stok}",
+                        "Sisa Stok Akhir : ${buku.stok}",
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -148,8 +136,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Melindungi variabel _stok penting untuk menjaga integritas data koperasi
-// karena stok tidak dapat diubah secara langsung dari luar class. Perubahan
-// stok hanya dapat dilakukan melalui method jual(), sehingga setiap transaksi
-// dapat divalidasi terlebih dahulu agar stok tidak menjadi negatif atau tidak
-// sesuai dengan kondisi sebenarnya.
+// Penanganan galat meningkatkan kepercayaan pengurus pada sistem karena
+// kesalahan input tidak menyebabkan program berhenti. Sistem memberikan
+// pesan yang jelas kepada petugas untuk memperbaiki input sehingga data
+// transaksi tetap aman, akurat, dan aplikasi menjadi lebih andal digunakan.
